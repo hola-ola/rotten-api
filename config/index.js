@@ -9,9 +9,17 @@ const logger = require("morgan");
 // https://www.npmjs.com/package/cookie-parser
 const cookieParser = require("cookie-parser");
 
+const cors = require("cors");
+
 // Middleware configuration
 module.exports = (app) => {
-  // In development environment the app logs
+  // In development `environment the app logs
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+    })
+  );
+
   app.use(logger("dev"));
 
   // To have access to `body` property in the request
