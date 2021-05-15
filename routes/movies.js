@@ -9,4 +9,10 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/:allTheSingleMovies", (req, res) => {
+  Movie.findById(req.params.allTheSingleMovies).then((movie) => {
+    res.json(movie);
+  });
+});
+
 module.exports = router;
