@@ -17,11 +17,16 @@ const userSchema = new Schema({
     unique: true,
     required: true,
   },
-  profilePic: String,
+  profilePic: {
+    type: String,
+    default:
+      "https://i.pinimg.com/originals/77/d1/89/77d1894aa66cef65c31b875bd03a6b9a.jpg",
+  },
   wishlist: [{ type: Schema.Types.ObjectId, ref: "Movie" }],
   role: {
     type: String,
     enum: ["admin", "regular"],
+    default: "regular",
   },
 });
 
