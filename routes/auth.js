@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 router.post("/signup", (req, res) => {
   // First validate the req.body
   const { username, email, password } = req.body;
+  console.log("req.body:", req.body);
 
   if (!username || !email || !password) {
     // WE SHOULD DISPLAY AN ERROR
