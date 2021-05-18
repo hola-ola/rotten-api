@@ -9,4 +9,8 @@ const moviesRouter = require("./movies");
 
 router.use("/movies", moviesRouter);
 
+const authRouter = require("./auth");
+
+router.use("/auth", authRouter);
+
 module.exports = router;
