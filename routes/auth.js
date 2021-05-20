@@ -2,6 +2,20 @@ const router = require("express").Router();
 const User = require("../models/User.model");
 const Session = require("../models/Session.model");
 const bcrypt = require("bcrypt");
+const isLoggedIn = require("../middleware/isLoggedIn");
+
+router.get("/me", isLoggedIn, (req, res) => {
+  // console.log(req.headers);
+  res.json(true);
+  // const accessToken = req.headers.authorization;
+
+  // Session.findById(accessToken)
+  //   .populate("user")
+  //   .then((theSession) => {
+  //     console.log("theSession:", theSession);
+  //     res.json(theSession.user);
+  //   });
+});
 
 router.post("/signup", (req, res) => {
   // First validate the req.body
@@ -46,7 +60,10 @@ router.post("/signup", (req, res) => {
       }).then((createdUser) => {
         Session.create({ user: createdUser._id })
           .then((createdSession) => {
-            res.json({ user: createdUser, accessToken: createdSession._id });
+            res.json({
+              user: createdUser,
+              accessToken: createdSession._id,
+            });
           })
           .catch((err) => {
             res.status(500).json({ message: err.message });
@@ -63,6 +80,48 @@ router.post("/signup", (req, res) => {
   // Create a user with that data + hashed password
   // LogIn the user immediately
   // IF ALLES GUT: send the user back to the frontend
+});
+
+router.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  User.findOne({ username })
+    .then((theUser) => {
+      if (!theUser) {
+        // handle the bliiiiip out of this situation
+      }
+
+      const isSamePassword = bcrypt.compare(password, theUser.password);
+
+      if (!isSamePassword) {
+        // handle the bliiiiip out of this situation
+      }
+
+      Session.create({
+        user: theUser._id,
+      })
+        .then((createdSession) => {
+          res.json({ user: theUser, accessToken: createdSession._id });
+        })
+        .catch((err) => {
+          res.status(500).json({ errorMessage: "oops" });
+        });
+    })
+    .catch((err) => {
+      res.status(500).json({ errorMessage: "oops" });
+    });
+});
+
+router.delete("/logout", (req, res) => {
+  const accessToken = req.headers.authorization;
+
+  Session.findByIdAndDelete(accessToken)
+    .catch((err) => {
+      console.error(err.message);
+    })
+    .finally(() => {
+      res.json(true);
+    });
 });
 
 module.exports = router;
