@@ -5,16 +5,16 @@ const bcrypt = require("bcrypt");
 const isLoggedIn = require("../middleware/isLoggedIn");
 
 router.get("/me", isLoggedIn, (req, res) => {
-  // console.log(req.headers);
-  res.json(true);
-  // const accessToken = req.headers.authorization;
+  console.log(req.headers);
+  // res.json(true);
+  const accessToken = req.headers.authorization;
 
-  // Session.findById(accessToken)
-  //   .populate("user")
-  //   .then((theSession) => {
-  //     console.log("theSession:", theSession);
-  //     res.json(theSession.user);
-  //   });
+  Session.findById(accessToken)
+    .populate("user")
+    .then((theSession) => {
+      console.log("theSession:", theSession);
+      res.json(theSession.user);
+    });
 });
 
 router.post("/signup", (req, res) => {
